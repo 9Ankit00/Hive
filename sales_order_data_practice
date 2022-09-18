@@ -1,0 +1,116 @@
+#Store raw data into hdfs location
+hadoop fs -put /home/cloudera/Desktop/Hive-Class-main/sales_order_data.csv  /tmp/hive_data_class/
+
+#To check data is present in hdfs location
+hadoop fs -ls /tmp/hive_data_class
+Found 2 items
+-rw-r--r--   1 cloudera supergroup        655 2022-09-12 14:15 /tmp/hive_data_class/depart_data.csv
+-rw-r--r--   1 cloudera supergroup     360233 2022-09-18 08:24 /tmp/hive_data_class/sales_order_data.csv
+
+#Create a internal hive table "sales_order_csv" which will store csv data sales_order_csv .. make sure to skip header row while creating table
+hive> use hive_class_b1;
+OK
+Time taken: 0.022 seconds
+hive> create table sales_order_csv(
+    > ORDERNUMBER int,
+    > QUANTITYORDERED int,
+    > PRICEEACH float,
+    > ORDERLINENUMBER int,
+    > SALES FLOAT,
+    > STATUS string,
+    > QTR_ID int,
+    > MONTH_ID int,
+    > YEAR_ID int,
+    > PRODUCTLINE string,
+    > MSRP int,
+    > PRODUCTCODE string,
+    > PHONE string,
+    > CITY string,
+    > STATE string,
+    > POSTALCODE string,
+    > COUNTRY string,
+    > TERRITORY string,
+    > CONTACTLASTNAME string,
+    > CONTACTFIRSTNAME string,
+    > DEALSIZE string
+    > )
+    > row format delimited
+    > fields terminated by ','
+    > TBLPROPERTIES("skip.header.line.count"="1");
+OK
+hive> describe sales_order_csv;
+OK
+ordernumber         	int                 	                    
+quantityordered     	int                 	                    
+priceeach           	float               	                    
+orderlinenumber     	int                 	                    
+sales               	float               	                    
+status              	string              	                    
+qtr_id              	int                 	                    
+month_id            	int                 	                    
+year_id             	int                 	                    
+productline         	string              	                    
+msrp                	int                 	                    
+productcode         	string              	                    
+phone               	string              	                    
+city                	string              	                    
+state               	string              	                    
+postalcode          	string              	                    
+country             	string              	                    
+territory           	string              	                    
+contactlastname     	string              	                    
+contactfirstname    	string              	                    
+dealsize            	string              	                    
+Time taken: 0.163 seconds, Fetched: 21 row(s)
+
+#Load data from hdfs path into "sales_order_csv" 
+hive> load data inpath '/tmp/hive_data_class/' into table sales_order_csv;
+Loading data to table hive_class_b1.sales_order_csv
+Table hive_class_b1.sales_order_csv stats: [numFiles=1, numRows=0, totalSize=360233, rawDataSize=0]
+OK
+Time taken: 0.322 seconds
+
+hive> select  * from sales_order_csv limit 2;
+OK
+10107	30	95.7	2	2871.0	Shipped	1	2	2003	Motorcycles	95	S10_1678	2125557818	NYC	NY	10022	USA	NA	Yu	Kwai	Small
+10121	34	81.35	5	2765.9	Shipped	2	5	2003	Motorcycles	95	S10_1678	26.47.1555	Reims		51100	FranceEMEA	Henriot	Paul	Small
+Time taken: 0.254 seconds, Fetched: 2 row(s)
+
+
+Time taken: 0.19 seconds
+
+#Create an internal hive table which will store data in ORC format "sales_order_orc"
+hive> create table sales_order_orc
+    > (
+    > ORDERNUMBER int,
+    > QUANTITYORDERED int,
+    > PRICEEACH float,
+    > ORDERLINENUMBER int,
+    > SALES float,
+    > STATUS string,
+    > QTR_ID int,
+    > MONTH_ID int,
+    > YEAR_ID int,
+    > PRODUCTLINE string,
+    > MSRP int,
+    > PRODUCTCODE string,
+    > PHONE string,
+    > CITY string,
+    > STATE string,
+    > POSTALCODE string,
+    > COUNTRY string,
+    > TERRITORY string,
+    > CONTACTLASTNAME string,
+    > CONTACTFIRSTNAME string,
+    > DEALSIZE string
+    > )
+    > stored as orc;
+OK
+Time taken: 0.137 seconds
+ 
+
+
+#Load data from "sales_order_csv" into "sales_order_orc"
+hive> from sales_order_csv insert overwrite table sales_order_orc select *; 
+
+
