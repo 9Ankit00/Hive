@@ -165,3 +165,50 @@ OK
 2004	4724162.593383789
 2005	1791486.7086791992
 
+#d. In which quarter sales was minimum
+hive> set hive.cli.print.header=true;
+hive> select a.QTR_ID,a.year_id from (select sum(sales) totalsales,QTR_ID,year_id from sales_order_orc group by QTR_ID,year_id order by totalsales limit 1) a;  
+Query ID = cloudera_20220922164141_f3baec5f-b982-4f73-b19d-4548d7f87d7f
+Total jobs = 2
+Launching Job 1 out of 2
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1663884288379_0022, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1663884288379_0022/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1663884288379_0022
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2022-09-22 16:41:57,009 Stage-1 map = 0%,  reduce = 0%
+2022-09-22 16:42:03,197 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.6 sec
+2022-09-22 16:42:10,435 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 1.6 sec
+MapReduce Total cumulative CPU time: 2 seconds 730 msec
+Ended Job = job_1663884288379_0022
+Launching Job 2 out of 2
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1663884288379_0023, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1663884288379_0023/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1663884288379_0023
+Hadoop job information for Stage-2: number of mappers: 1; number of reducers: 1
+2022-09-22 16:42:18,169 Stage-2 map = 0%,  reduce = 0%
+2022-09-22 16:42:22,462 Stage-2 map = 100%,  reduce = 0%, Cumulative CPU 0.78 sec
+2022-09-22 16:42:27,648 Stage-2 map = 100%,  reduce = 100%, Cumulative CPU 2.17 sec
+MapReduce Total cumulative CPU time: 2 seconds 170 msec
+Ended Job = job_1663884288379_0023
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 2.73 sec   HDFS Read: 260070 HDFS Write: 386 SUCCESS
+Stage-Stage-2: Map: 1  Reduce: 1   Cumulative CPU: 2.17 sec   HDFS Read: 5626 HDFS Write: 7 SUCCESS
+Total MapReduce CPU Time Spent: 4 seconds 900 msec
+OK
+a.qtr_id	a.year_id
+1	2003
+Time taken: 41.948 seconds, Fetched: 1 row(s)
+
+
