@@ -90,7 +90,6 @@ hive> create table sales_order_orc
     > STATUS string,
     > QTR_ID int,
     > MONTH_ID int,
-    > YEAR_ID int,
     > PRODUCTLINE string,
     > MSRP int,
     > PRODUCTCODE string,
@@ -98,15 +97,16 @@ hive> create table sales_order_orc
     > CITY string,
     > STATE string,
     > POSTALCODE string,
-    > COUNTRY string,
     > TERRITORY string,
     > CONTACTLASTNAME string,
     > CONTACTFIRSTNAME string,
     > DEALSIZE string
     > )
-    > stored as orc;
+    > partitioned by (country string,year_id int)
+    > stored as orc
+    > ;
 OK
-Time taken: 0.137 seconds
+Time taken: 0.394 second
  
 
 
