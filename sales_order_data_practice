@@ -168,7 +168,52 @@ OK
 2004	4724162.593383789
 2005	1791486.7086791992
 
-#d. In which quarter sales was minimum
+##b. Find a product for which maximum orders were placed
+hive>select a.PRODUCTCODE from (select sum(QUANTITYORDERED) totalorder,PRODUCTCODE from sales_order_orc group by productcode order by totalorder desc limit 1) a;
+Query ID = cloudera_20220923123434_2fa40687-dcb2-40b3-b623-89a95dd7e7c7
+Total jobs = 2
+Launching Job 1 out of 2
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1663958987276_0011, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1663958987276_0011/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1663958987276_0011
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2022-09-23 12:34:25,120 Stage-1 map = 0%,  reduce = 0%
+2022-09-23 12:34:35,969 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 2.02 sec
+2022-09-23 12:34:42,203 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 3.24 sec
+MapReduce Total cumulative CPU time: 3 seconds 240 msec
+Ended Job = job_1663958987276_0011
+Launching Job 2 out of 2
+Number of reduce tasks determined at compile time: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1663958987276_0012, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1663958987276_0012/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1663958987276_0012
+Hadoop job information for Stage-2: number of mappers: 1; number of reducers: 1
+2022-09-23 12:34:49,311 Stage-2 map = 0%,  reduce = 0%
+2022-09-23 12:34:54,497 Stage-2 map = 100%,  reduce = 0%, Cumulative CPU 1.02 sec
+2022-09-23 12:35:00,735 Stage-2 map = 100%,  reduce = 100%, Cumulative CPU 2.2 sec
+MapReduce Total cumulative CPU time: 2 seconds 200 msec
+Ended Job = job_1663958987276_0012
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 3.24 sec   HDFS Read: 258079 HDFS Write: 3289 SUCCESS
+Stage-Stage-2: Map: 1  Reduce: 1   Cumulative CPU: 2.2 sec   HDFS Read: 8229 HDFS Write: 9 SUCCESS
+Total MapReduce CPU Time Spent: 5 seconds 440 msec
+OK
+S18_3232
+Time taken: 52.414 seconds, Fetched: 1 row(s)
+
+
+##d. In which quarter sales was minimum
 hive> set hive.cli.print.header=true;
 hive> select a.QTR_ID,a.year_id from (select sum(sales) totalsales,QTR_ID,year_id from sales_order_orc group by QTR_ID,year_id order by totalsales limit 1) a;  
 Query ID = cloudera_20220922164141_f3baec5f-b982-4f73-b19d-4548d7f87d7f
