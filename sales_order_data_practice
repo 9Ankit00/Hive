@@ -212,6 +212,41 @@ OK
 S18_3232
 Time taken: 52.414 seconds, Fetched: 1 row(s)
 
+##c. Calculate the total sales for each quarter
+hive>  select sum(SALES) TOTALSALES,QTR_ID,year_id from sales_order_csv group by qtr_id,year_id;
+Query ID = cloudera_20220923123939_ef841863-4ac5-4750-9ad8-e8aed47c3831
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1663958987276_0013, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1663958987276_0013/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1663958987276_0013
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2022-09-23 12:39:50,974 Stage-1 map = 0%,  reduce = 0%
+2022-09-23 12:39:56,228 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 1.26 sec
+2022-09-23 12:40:04,572 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 2.5 sec
+MapReduce Total cumulative CPU time: 2 seconds 500 msec
+Ended Job = job_1663958987276_0013
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 2.5 sec   HDFS Read: 371437 HDFS Write: 253 SUCCESS
+Total MapReduce CPU Time Spent: 2 seconds 500 msec
+OK
+445094.6897583008	1	2003
+833730.6786499023	1	2004
+1071992.3580932617	1	2005
+562365.2218017578	2	2003
+766260.7305297852	2	2004
+719494.3505859375	2	2005
+649514.5415039062	3	2003
+1109396.2674560547	3	2004
+1860005.094177246	4	2003
+2014774.9167480469	4	2004
+
 
 ##d. In which quarter sales was minimum
 hive> set hive.cli.print.header=true;
