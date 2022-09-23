@@ -1,13 +1,13 @@
-#Store raw data into hdfs location
+##Store raw data into hdfs location
 hadoop fs -put /home/cloudera/Desktop/Hive-Class-main/sales_order_data.csv  /tmp/hive_data_class/
 
-#To check data is present in hdfs location
+##To check data is present in hdfs location
 hadoop fs -ls /tmp/hive_data_class
 Found 2 items
 -rw-r--r--   1 cloudera supergroup        655 2022-09-12 14:15 /tmp/hive_data_class/depart_data.csv
 -rw-r--r--   1 cloudera supergroup     360233 2022-09-18 08:24 /tmp/hive_data_class/sales_order_data.csv
 
-#Create a internal hive table "sales_order_csv" which will store csv data sales_order_csv .. make sure to skip header row while creating table
+##Create a internal hive table "sales_order_csv" which will store csv data sales_order_csv .. make sure to skip header row while creating table
 hive> use hive_class_b1;
 OK
 Time taken: 0.022 seconds
@@ -63,14 +63,16 @@ contactfirstname    	string
 dealsize            	string              	                    
 Time taken: 0.163 seconds, Fetched: 21 row(s)
 
-#Load data from hdfs path into "sales_order_csv" 
+##Load data from hdfs path into "sales_order_csv" 
 hive> load data inpath '/tmp/hive_data_class/' into table sales_order_csv;
+
 Loading data to table hive_class_b1.sales_order_csv
 Table hive_class_b1.sales_order_csv stats: [numFiles=1, numRows=0, totalSize=360233, rawDataSize=0]
 OK
 Time taken: 0.322 seconds
 
 hive> select  * from sales_order_csv limit 2;
+
 OK
 10107	30	95.7	2	2871.0	Shipped	1	2	2003	Motorcycles	95	S10_1678	2125557818	NYC	NY	10022	USA	NA	Yu	Kwai	Small
 10121	34	81.35	5	2765.9	Shipped	2	5	2003	Motorcycles	95	S10_1678	26.47.1555	Reims		51100	FranceEMEA	Henriot	Paul	Small
@@ -110,7 +112,7 @@ Time taken: 0.394 second
  
 
 
-#Load data from "sales_order_csv" into "sales_order_orc"
+##Load data from "sales_order_csv" into "sales_order_orc"
 hive> insert overwrite table sales_order_orc partition(country,year_id) 
     > select 
     > ORDERNUMBER ,
@@ -136,9 +138,10 @@ hive> insert overwrite table sales_order_orc partition(country,year_id)
     > 
     > from sales_order_csv;
  
-#a. Calculatye total sales per year
+##a. Calculatte total sales per year
 hive> set mapreduce.jobs.reduces=5;
 hive> select year_id, sum(sales) as total_sales from sales_order_orc group by year_id;
+
 Query ID = cloudera_20220922162222_4fc802b5-47c3-4947-ba21-00dcb03d1b9e
 Total jobs = 1
 Launching Job 1 out of 1
@@ -211,7 +214,7 @@ a.qtr_id	a.year_id
 1	2003
 Time taken: 41.948 seconds, Fetched: 1 row(s)
 
-#e. In which country sales was maximum and in which country sales was minimum
+##e. In which country sales was maximum and in which country sales was minimum
 #maximum
 hive> select sum(sales) totalsales ,country from sales_order_csv group by country order by totalsales TOP;
 FAILED: ParseException line 1:96 extraneous input 'TOP' expecting EOF near '<EOF>'
@@ -304,7 +307,7 @@ a.country
 Ireland
 Time taken: 36.087 seconds, Fetched: 1 row(s)
 
-#f. Calculate quartelry sales for each city
+##f. Calculate quartelry sales for each city
 hive> select sum(sales) totalsales ,QTR_ID,city,year_id from sales_order_csv group by QTR_ID,city,year_id  order by year_id,city,qtr_id;
 Query ID = cloudera_20220922173535_3ae1eb19-c829-41f8-a71c-5f6d6774139a
 Total jobs = 2
@@ -581,7 +584,8 @@ totalsales	qtr_id	city	year_id
 35680.350341796875	2	Strasbourg	2005
 15139.1201171875	1	Toulouse	2005
 Time taken: 42.19 seconds, Fetched: 234 row(s)
-#h. Find a month for each year in which maximum number of quantities were sold
+
+##h. Find a month for each year in which maximum number of quantities were sold
 hive> select DATE_FORMAT(add_months('0001-00-01',a.month_id),'MMMM'),a.year_id from (select sum(QUANTITYORDERED) QUANTITY,month_id,year_id,max(sum(QUANTITYORDERED)) over(partition by year_id) as max_quantity from sales_order_csv group by month_id,year_id) a where a.QUANTITY=a.max_quantity;
 Query ID = cloudera_20220923121717_69fcc0b8-a71e-4578-b72f-f72d951cf6d7
 Total jobs = 2
